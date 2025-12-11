@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Excel } from '../service/excel';
+import { RouterLink } from "@angular/router";
 
 
 @Component({
   selector: 'app-search',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './search.html',
   styleUrl: './search.css',
 })
