@@ -1,0 +1,142 @@
+<nav class="flex items-center justify-between bg-pink-600 px-6 py-4 shadow-md">
+  <div>
+    <img class="h-10" src="https://upload.wikimedia.org/wikipedia/commons/7/79/Telekom_Logo_2013_white.svg"
+      alt="Telekom Logo" />
+  </div>
+  <div>
+    <p class="text-white text-3xl font-semibold tracking-wide">Magenta</p>
+  </div>
+</nav>
+
+<div class="p-6 bg-gray-50 space-y-4">
+  <!-- Row 1: General search -->
+  <div class="flex justify-start">
+    <input type="text" placeholder="Search" [(ngModel)]="searchText"
+      class="h-12 w-64 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+  </div>
+
+  <!-- Row 2: Filters + button -->
+  <div class="flex flex-wrap items-center gap-4">
+    <input type="text" placeholder="Serial Number" [(ngModel)]="serialNumber"
+      class="h-12 w-64 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+
+    <input type="text" placeholder="Line ID" [(ngModel)]="lineId"
+      class="h-12 w-64 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+
+    <select class="h-12 w-64 border border-gray-300 rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
+      [(ngModel)]="status">
+      <option value="">Select Status</option>
+      <option>NEW</option>
+      <option>WAITING</option>
+      <option>READY</option>
+      <option>COMPLETED</option>
+      <option>IN_PROGRESS</option>
+      <option>FAILED</option>
+    </select>
+
+    <button class="bg-pink-600 text-white w-32 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium"
+      (click)="search()">
+      Search
+    </button>
+    <button class="px-4 w-32 h-12 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 " (click)="clear()">
+      Clear
+    </button>
+
+    <label class="ml-4 flex items-center gap-2">
+      <span class="text-sm text-gray-600">Results per page</span>
+      <select
+        [(ngModel)]="pageSize"
+        (change)="onPageSizeChange()"
+        class="h-10 border rounded px-2"
+      >
+
+        <option *ngFor="let opt of pageSizeOptions">{{ opt }}</option>
+      </select>
+    </label>
+
+    <button class="bg-pink-600 text-white w-42 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium" (click)="exportJson()">
+      Export to Excel</button>
+
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="p-6 overflow-x-auto">
+  <table class="min-w-full border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden">
+    <thead class=" bg-pink-600 text-white z-10">
+      <tr>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Serial Number</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Line ID</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">MAC Address</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">State</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Message</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">ADSL Username</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">ADSL Password</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Username</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Password</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Username 2</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Password 2</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">SSID</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Encrypted Password</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Created At</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">Updated At</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">SCA Service ID</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">SCA Status</th>
+        <th class="py-3 px-4 text-left text-sm font-semibold">SCA Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filteredData" class="border-t hover:bg-pink-50 transition-colors">
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.serialNumber }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.lineId }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.macAddress }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.state }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.status }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.message }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.adslUsername }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.adslPassword }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipUsername }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipPassword }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipUsername2 }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipPassword2 }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.ssid }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.encryptedPassword }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.createdAt }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.updatedAt }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.scaServiceId }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.scaStatus }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">{{ item.scaDetails }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex justify-center items-center py-6">
+    <span class="loader border-pink-600 border-4 border-t-transparent rounded-full w-6 h-6 animate-spin"></span>
+    <p class="ml-3 text-gray-600">Loading...</p>
+  </div>
+
+  <!-- Empty table -->
+  <p *ngIf="!loading && results.length === 0 && !error" class="text-gray-500 text-center py-4">
+    Enter search filters and click “Search” to begin.
+  </p>
+
+  <!-- Pagination -->
+  <div class="flex justify-between items-center mt-4">
+    <button (click)="prevPage()" [disabled]="currentPage <= 1"
+      class="px-4 w-32 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50">
+      Previous
+    </button>
+
+    <p class="text-gray-700 text-sm">
+      Page {{ currentPage }} of
+      {{ (results.length / pageSize) | number:'1.0-0' }}
+    </p>
+
+    <button (click)="nextPage()" [disabled]="currentPage * pageSize >= results.length"
+      class="px-4 w-32 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50">
+      Next
+    </button>
+  </div>
+</div>
