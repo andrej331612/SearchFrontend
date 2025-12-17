@@ -1,9 +1,7 @@
 <div class="p-6 bg-gray-50 space-y-6">
   <!-- Back Button -->
-  <button
-    class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition font-medium"
-    [routerLink]="['/']"
-  >
+  <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition font-medium"
+    [routerLink]="['/']">
     Back to Home
   </button>
 
@@ -12,18 +10,12 @@
     <h1 class="text-2xl font-bold">Upload Excel File</h1>
 
     <div class="flex items-center gap-4">
-      <input
-  type="file"
-  accept=".xlsx"
-  (change)="onFileSelected($event)"
-  class="block w-96 text-sm text-gray-700 border border-gray-300 rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-pink-600 file:text-white"/>
+      <input type="file" accept=".xlsx,.xls,.csv,.txt,.json,.xml,.tsv,.log" (change)="onFileSelected($event)"
+        class="block w-96 text-sm text-gray-700 border border-gray-300 rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-pink-600 file:text-white" />
 
 
-      <button
-        class="bg-pink-600 text-white w-52 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium"
-        (click)="processExcel()"
-        [disabled]="!excelData.length"
-      >
+      <button class="bg-pink-600 text-white w-52 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium"
+        (click)="processExcel()" [disabled]="!excelData.length">
         Process & Call API
       </button>
     </div>

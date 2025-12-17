@@ -1,19 +1,13 @@
-<div class="p-6 bg-gray-50 space-y-4">
-  <!-- Row 1: General search -->
-  <div class="flex justify-start">
-    <input type="text" placeholder="Search" [(ngModel)]="searchText"
-      class="h-12 w-52 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-pink-500" />
-  </div>
-
-  <!-- Row 2: Filters + button -->
+<div class="p-6 space-y-4 shadow mt-5 mb-10 rounded-2xl">
+  <!-- Row 1: Search filters -->
   <div class="flex flex-wrap items-center gap-4">
     <input type="text" placeholder="Serial Number" [(ngModel)]="serialNumber"
-      class="h-12 w-52 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+      class="h-12 flex-1 min-w-[200px] max-w-xs border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
     <input type="text" placeholder="Line ID" [(ngModel)]="lineId"
-      class="h-12 w-52 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+      class="h-12 flex-1 min-w-[200px] max-w-xs border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-    <select class="h-12 w-52 border border-gray-300 rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
+    <select class="h-12 flex-1 min-w-[200px] max-w-xs border border-gray-300 rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
       [(ngModel)]="status">
       <option value="">Select Status</option>
       <option>NEW</option>
@@ -24,40 +18,43 @@
       <option>FAILED</option>
     </select>
 
-    <button class="bg-pink-600 text-white w-28 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium"
+    <button class="bg-pink-600 text-white h-12 px-6 min-w-[100px] rounded-lg hover:bg-pink-500 transition font-medium"
       (click)="search()">
       Search
     </button>
-    <button class="px-4 w-28 h-12 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 " (click)="clear()">
+    
+    <button class="h-12 px-6 min-w-[100px] py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium" (click)="clear()">
       Clear
     </button>
+  </div>
 
-    <label class="ml-4 flex items-center gap-2">
+  <!-- Row 2: Page size + Actions -->
+  <div class="flex flex-wrap items-center gap-4">
+    <label class="flex items-center gap-2">
       <span class="text-sm text-gray-600">Results per page</span>
       <select
         [(ngModel)]="pageSize"
         (change)="onPageSizeChange()"
-        class="h-10 border rounded px-2"
-      >
-
+        class="h-10 w-20 border rounded px-2">
         <option *ngFor="let opt of pageSizeOptions">{{ opt }}</option>
       </select>
     </label>
 
-    <button class="bg-pink-600 text-white w-42 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium" (click)="exportJson()">
-      Export to Excel</button>
+    <button class="bg-pink-600 text-white h-12 px-6 min-w-[140px] rounded-lg hover:bg-pink-700 transition font-medium" (click)="exportJson()">
+      Export to Excel
+    </button>
     
-    <button class="bg-pink-600 text-white w-42 h-12 px-6 rounded-lg hover:bg-pink-700 transition font-medium" [routerLink]="['/upload-excel']">
-      Upload Excel</button>
-
+    <button class="bg-pink-600 text-white h-12 px-6 min-w-[140px] rounded-lg hover:bg-pink-700 transition font-medium" [routerLink]="['/upload-excel']">
+      Upload Excel
+    </button>
   </div>
 </div>
 
 
 <!-- Table Section -->
-<div class="p-6 overflow-x-auto">
+<div class=" overflow-x-auto p-6 space-y-4 shadow mt-5 mb-10 rounded-2xl ">
   <table class="min-w-full border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden">
-    <thead class=" bg-pink-600 text-white z-10">
+    <thead class=" text-gray-800 z-10">
       <tr>
         <th class="py-3 px-4 text-left text-sm font-semibold">Serial Number</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">Line ID</th>
@@ -66,13 +63,8 @@
         <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">Message</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">ADSL Username</th>
-        <th class="py-3 px-4 text-left text-sm font-semibold">ADSL Password</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Username</th>
-        <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Password</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Username 2</th>
-        <th class="py-3 px-4 text-left text-sm font-semibold">VoIP Password 2</th>
-        <th class="py-3 px-4 text-left text-sm font-semibold">SSID</th>
-        <th class="py-3 px-4 text-left text-sm font-semibold">Encrypted Password</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">Created At</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">Updated At</th>
         <th class="py-3 px-4 text-left text-sm font-semibold">SCA Service ID</th>
@@ -81,26 +73,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of filteredData" class="border-t hover:bg-pink-50 transition-colors">
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.serialNumber }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.lineId }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.macAddress }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.state }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.status }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.message }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.adslUsername }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.adslPassword }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipUsername }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipPassword }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipUsername2 }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.voipPassword2 }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.ssid }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.encryptedPassword }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.createdAt }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.updatedAt }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.scaServiceId }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.scaStatus }}</td>
-        <td class="py-3 px-4 text-sm text-gray-700">{{ item.scaDetails }}</td>
+      <tr *ngFor="let item of filteredData" class="border-t">
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.serialNumber }}">{{ item.serialNumber }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.lineId }}">{{ item.lineId }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.macAddress }}">{{ item.macAddress }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.state }}">{{ item.state }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.status }}">{{ item.status }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.message }}">{{ item.message.split(' ').slice(0, 3) }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.adslUsername }}">{{ item.adslUsername }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.voipUsername }}">{{ item.voipUsername }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.voipUsername2 }}">{{ item.voipUsername2 }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.createdAt }}">{{ item.createdAt }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.updatedAt }}">{{ item.updatedAt }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.scaServiceId }}">{{ item.scaServiceId }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.scaStatus }}">{{ item.scaStatus }}</td>
+        <td class="py-3 px-4 text-sm text-gray-700 max-w-xs " title="{{ item.scaDetails }}">{{ item.scaDetails }}</td>
       </tr>
     </tbody>
   </table>
@@ -113,7 +100,7 @@
 
   <!-- Empty table -->
   <p *ngIf="!loading && results.length === 0 && !error" class="text-gray-500 text-center py-4">
-    Enter search filters and click “Search” to begin.
+    Enter search filters and click "Search" to begin.
   </p>
 
   <!-- Pagination -->

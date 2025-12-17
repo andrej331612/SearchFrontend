@@ -1,47 +1,54 @@
 import { Component } from '@angular/core';
-import { UploadExcelService } from '../service/upload-excel';
 import { HttpClient } from '@angular/common/http';
 import { JsonPipe, CommonModule } from '@angular/common';
 import { RouterLink } from "@angular/router";
+import { UploadExcelService } from '../service/upload-excel';
 
 @Component({
   selector: 'app-upload-excel',
+  standalone: true,
   imports: [CommonModule, JsonPipe, RouterLink],
   templateUrl: './upload-excel.html',
   styleUrl: './upload-excel.css',
 })
 export class UploadExcel {
 
- excelData: any[] = [];
+  excelData: any[] = [];
+  selectedFile: File | null = null;   
 
   constructor(
     private excelUpload: UploadExcelService,
     private http: HttpClient
   ) {}
 
+  allowedTypes = [
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+  'application/vnd.ms-excel',                                          
+  'text/plain',                                                        
+  'text/csv',                                                          
+  'application/json',                                                  
+  'application/xml', 'text/xml',                                       
+  'text/tab-separated-values'                                          
+];
+
   async onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
+  const file = event.target.files[0];
+  if (!file) return;
 
-    this.excelData = await this.excelUpload.parseExcel(file);
-    console.log("Parsed Excel Data:", this.excelData);
-  }
+  this.selectedFile = file;
+  this.excelData = await this.excelUpload.parseExcel(file);
+  console.log("Parsed Excel Data:", this.excelData);
+}
 
-  // TO:DO Implemet this 
   processExcel() {
-    if (!this.excelData.length) return;
+    if (!this.selectedFile) return;
 
-    this.excelData.forEach(row => {
-      const params = {
-        serialNumber: row['serialNumber'],
-        lineId: row['lineId'],
-        status: row['status']
-      };
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);       
 
-      this.http.get('/api/rdk/migrations', { params }).subscribe({
-        next: res => console.log('API OK:', res),
-        error: err => console.error('API ERROR:', err)
-      });
+    this.http.post('/api/rdk/migrations', formData).subscribe({
+      next: res => console.log('API OK:', res),
+      error: err => console.error('API ERROR:', err)
     });
   }
 }

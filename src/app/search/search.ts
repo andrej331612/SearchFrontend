@@ -15,17 +15,17 @@ import { RouterLink } from "@angular/router";
 export class Search {
 
   //Form Imputs
-  public searchText : string = '';
-  public serialNumber : string = '';
-  public status : string = '';
-  public lineId : string = '';
+  public searchText: string = '';
+  public serialNumber: string = '';
+  public status: string = '';
+  public lineId: string = '';
 
   //Results
-  public results : any[] = [];
+  public results: any[] = [];
   public filteredData: any[] = [];
 
   //Pagination
-  public currentPage = 0;
+  public currentPage = 1;
   public pageSize = 5;
   public pageSizeOptions = [5, 10, 20, 50];
 
@@ -36,8 +36,8 @@ export class Search {
 
 
   constructor(private http: HttpClient,
-              private excelService: Excel
-  ) {}
+    private excelService: Excel
+  ) { }
 
   search() {
     this.loading = true;
@@ -52,8 +52,8 @@ export class Search {
       next: (data) => {
         this.results = data;
         this.loading = false;
-        this.currentPage=1;
-        this.filteredData=this.paginateData();
+        this.currentPage = 1;              
+        this.filteredData = this.paginateData();
       },
       error: (err) => {
         console.error('API error:', err);
@@ -64,11 +64,11 @@ export class Search {
   }
 
   //Clear Button
-  clear(){
+  clear() {
     this.results = [];
     this.filteredData = [];
     this.searchText = "";
-    this.serialNumber ="";
+    this.serialNumber = "";
     this.lineId = "";
     this.status = "";
     this.currentPage = 0;
@@ -77,12 +77,13 @@ export class Search {
   // Pagination logic
   paginateData() {
     const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
+    const end = this.currentPage * this.pageSize;
     return this.results.slice(start, end);
   }
 
   nextPage() {
-    if (this.currentPage * this.pageSize < this.results.length) {
+    const maxPage = Math.ceil(this.results.length / this.pageSize);
+    if (this.currentPage < maxPage) {
       this.currentPage++;
       this.filteredData = this.paginateData();
     }
@@ -97,11 +98,11 @@ export class Search {
 
   /** Change page size */
   onPageSizeChange() {
-    this.currentPage = 1;
+    this.currentPage = 1;                  
     this.filteredData = this.paginateData();
   }
-  
+
   exportJson(): void {
-  this.excelService.exportAsExcelFile(this.results, 'Search-Results');
-}
+    this.excelService.exportAsExcelFile(this.results, 'Search-Results');
+  }
 }
